@@ -3,7 +3,8 @@ version: "3.9"
 services:
   casamento:
     build: .
-    container_name: casamento_site
+    image: emcasamento
+    container_name: emcasamento
     restart: always
     ports:
       - "3000:3000"
