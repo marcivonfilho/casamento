@@ -1,65 +1,159 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import BackgroundSlideshow from "@/components/BackgroundSlideshow";
+import RSVPModal from "@/components/RSVPModal";
+import MusicPlayer from "@/components/MusicPlayer";
 
 export default function Home() {
+  const [tempo, setTempo] = useState("");
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const alvo = new Date("2026-03-07T17:00:00");
+
+    const timer = setInterval(() => {
+      const agora = new Date();
+      const diff = alvo.getTime() - agora.getTime();
+
+      const dias = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+      const horas = Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24));
+      const min = Math.max(0, Math.floor((diff / (1000 * 60)) % 60));
+
+      setTempo(`${dias} dias • ${horas}h ${min}m`);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="relative h-screen w-full overflow-hidden bg-black">
+
+      <BackgroundSlideshow
+        images={[
+          "/bg/1.jpg",
+          "/bg/5.jpg",
+          "/bg/3.jpg",
+          "/bg/6.jpg",
+          "/bg/2.jpg",
+          "/bg/4.jpg",
+        ]}
+        intervalMs={7000}
+      />
+
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/50" />
+
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6 text-white">
+
+        {/* NOMES */}
+        <h1 className="text-5xl md:text-7xl font-serif tracking-[0.12em]">
+          Emilly <span className="opacity-60">&</span> Marcivon
+        </h1>
+
+        {/* SUBTITULO */}
+        <p className="mt-6 text-lg tracking-widest opacity-80">
+          Casamento & Chá de Panela
+        </p>
+
+        {/* DATA */}
+        <p className="mt-2 opacity-80">
+          07 de Março de 2026 • 17:00
+        </p>
+
+        {/* CONTADOR */}
+        <div className="
+          bg-white/10 backdrop-blur-xl
+          border border-white/20
+          px-12 py-7
+          rounded-3xl
+          mt-10 mb-12
+          shadow-2xl
+        ">
+          <p className="text-sm opacity-70 mb-2 tracking-widest">FALTAM</p>
+          <p className="text-3xl md:text-4xl font-light">{tempo}</p>
+        </div>
+
+        {/* BOTÃO RSVP */}
+        <button
+          onClick={() => setOpen(true)}
+          className="
+          px-14 py-4
+          rounded-full
+          bg-white
+          text-black
+          text-lg
+          font-medium
+          shadow-2xl
+          hover:scale-[1.03]
+          transition
+          "
+        >
+          Confirmar presença
+        </button>
+
+        {/* BLOCO AÇÕES */}
+        <div className="mt-14 flex flex-col items-center gap-3">
+
+          <p className="text-[11px] tracking-[0.35em] uppercase opacity-60">
+            Chácara • Barra do Garças • MT
           </p>
+
+          <div className="flex gap-6 mt-2">
+
+            {/* LOCALIZAÇÃO */}
+            <a
+              href="https://maps.app.goo.gl/MYHJgfoPupsiAaLWA"
+              target="_blank"
+              className="
+              flex flex-col items-center gap-2
+              text-white text-xs tracking-wide
+              hover:scale-105 transition
+              "
+            >
+              <div className="
+                w-12 h-12 rounded-full
+                bg-white/10 backdrop-blur-xl
+                border border-white/20
+                flex items-center justify-center
+                hover:bg-white hover:text-black
+                transition
+              ">
+                📍
+              </div>
+              <span>Localização</span>
+            </a>
+
+            {/* PRESENTE / DOAÇÃO */}
+            <a
+              href="/presente"
+              className="
+              flex flex-col items-center gap-2
+              text-white text-xs tracking-wide
+              hover:scale-105 transition
+              "
+            >
+              <div className="
+                w-12 h-12 rounded-full
+                bg-white/10 backdrop-blur-xl
+                border border-white/20
+                flex items-center justify-center
+                hover:bg-white hover:text-black
+                transition
+              ">
+                🎁
+              </div>
+              <span>Presente</span>
+            </a>
+
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+      </div>
+
+      <RSVPModal open={open} onClose={() => setOpen(false)} />
+      <MusicPlayer src="/music.mp3" />
+
+    </main>
   );
 }

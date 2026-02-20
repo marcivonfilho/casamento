@@ -1,0 +1,18 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Guest {
+  id        String   @id @default(cuid())
+  name      String
+  code      String   @unique
+  confirmed Boolean  @default(false)
+  qty       Int      @default(1)
+  message   String?
+  createdAt DateTime @default(now())
+}
